@@ -40,8 +40,6 @@ body {
   color: #ffcc00;
 }
 
-
-
 /* Game Container Styling */
 #gameContainer {
   margin-top: 60px; /* Adjust based on navbar height */
@@ -52,11 +50,16 @@ body {
 
 /* Game Over Container Styling */
 #gameOverContainer {
+  background: url(https://w0.peakpx.com/wallpaper/67/891/HD-wallpaper-classic-snake-adventures-snake-game.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
+  height: 100vh;
 }
 
 #gameOverContainer p {
@@ -75,4 +78,39 @@ body {
 
 #restartBtn:hover {
   background-color: #e6b800;
+}
+
+#startScreen {
+  background: url(https://w0.peakpx.com/wallpaper/67/891/HD-wallpaper-classic-snake-adventures-snake-game.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid black;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.snakeH1 {
+  color: white;
+  text-shadow: 0 0 10px #ffcc00, 0 0 20px #ffcc00, 0 0 30px #ffcc00,
+    0 0 40px #ffcc00, 0 0 50px #ffcc00, 0 0 60px #ffcc00, 0 0 70px #ffcc00;
+  text-align: center;
+  font-size: 50px;
+  font-weight: bold;
+  text-transform: uppercase;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
 }

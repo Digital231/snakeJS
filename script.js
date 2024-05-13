@@ -21,7 +21,21 @@ let direction = "right";
 let score = 0;
 let highScore = localStorage.getItem("highScore") || 0;
 let level = 1;
-//load images
+
+//load music
+const bgMusic = new Audio();
+bgMusic.src = "./assets/bg.mp3";
+bgMusic.loop = true;
+bgMusic.volume = 0.1;
+
+const eatSound = new Audio();
+eatSound.src = "./assets/eat.wav";
+eatSound.volume = 0.1;
+
+const gameOverSound = new Audio();
+gameOverSound.src = "./assets/lose.wav";
+gameOverSound.volume = 0.1;
+
 const foodImg = new Image();
 foodImg.src = "./assets/apple.png";
 
@@ -40,11 +54,9 @@ function increaseLevel() {
 function drawSnake() {
   snake.forEach((block, index) => {
     if (index === 0) {
-      // Draw snake head
       ctx.fillStyle = "green";
       ctx.fillRect(block.x, block.y, blockSize, blockSize);
 
-      // Draw eyes
       const eyeSize = blockSize / 5;
       const eyeOffset = blockSize / 4;
 
@@ -104,7 +116,6 @@ function drawSnake() {
         );
       }
     } else {
-      // Draw snake body
       ctx.fillStyle = "green";
       ctx.fillRect(block.x, block.y, blockSize, blockSize);
     }
@@ -136,8 +147,10 @@ function moveSnake() {
   snake.unshift(head);
 
   if (head.x === food.x && head.y === food.y) {
-    const levelScore = 10 * Math.pow(1.2, level - 1); // Increase score by 20% per level
+    const levelScore = 10 * Math.pow(1.2, level - 1);
     score += Math.round(levelScore);
+
+    eatSound.play();
     spawnFood();
   } else {
     snake.pop();
@@ -150,46 +163,30 @@ function spawnFood() {
 }
 
 function gameLoop() {
-  // Clear the canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // Draw the score and high score
   drawScore();
-
-  // Draw the level
   levelHTML.innerHTML = `Level: ${level}`;
-
-  // Draw the snake
   drawSnake();
-
-  // Draw the food
   drawFood();
-
-  // Move the snake
   moveSnake();
-
-  // Check for collision
   if (checkCollision()) {
-    // Update the high score if the current score is higher
+    gameOverSound.play();
+    bgMusic.pause();
     if (score > highScore) {
       highScore = score;
       localStorage.setItem("highScore", highScore);
     }
 
-    // Show the game over screen
     gameContainer.classList.add("d-none");
     gameOverContainer.classList.remove("d-none");
     gameOverScore.innerHTML = `Score: ${score}`;
     gameOverHighScore.innerHTML = `High Score: ${highScore}`;
 
-    // Reset the game
     resetGame();
   } else {
-    // Increase level if necessary
     increaseLevel();
 
-    // Continue the game loop
-    const delay = 150 / Math.pow(1.2, level - 1); // Decrease delay by 20% per level
+    const delay = 150 / Math.pow(1.2, level - 1);
     setTimeout(gameLoop, delay);
   }
 }
@@ -197,6 +194,7 @@ function gameLoop() {
 restartBtn.addEventListener("click", () => {
   resetGame();
   gameLoop();
+  bgMusic.play();
   gameContainer.classList.remove("d-none");
   gameOverContainer.classList.add("d-none");
 });
@@ -204,7 +202,6 @@ restartBtn.addEventListener("click", () => {
 function checkCollision() {
   const head = snake[0];
 
-  // Check collision with walls
   if (
     head.x < 0 ||
     head.x >= canvas.width ||
@@ -214,7 +211,6 @@ function checkCollision() {
     return true;
   }
 
-  // Check collision with snake body
   for (let i = 1; i < snake.length; i++) {
     if (head.x === snake[i].x && head.y === snake[i].y) {
       return true;
@@ -229,12 +225,13 @@ function resetGame() {
   direction = "right";
   score = 0;
   spawnFood();
-  drawScore(); // Ensure score is reset on screen
+  drawScore();
 }
 
 startGameBtn.addEventListener("click", () => {
   startScreen.classList.add("d-none");
   gameContainer.classList.remove("d-none");
+  bgMusic.play();
   gameLoop();
 });
 
